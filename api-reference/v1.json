@@ -1,0 +1,2840 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "innRoad.Integrations.Public.Api | v1",
+    "description": "This document describes the API endpoints available for the InnRoad Property Management System.\n\n## Pre-requisites:\n- Acquire API credentials (Oauth Client Id / Client Secret) from InnRoad team.\n- Acquire user credentials (Client Code, Username, Password) for a Test InnRoad Property from InnRoad team.\n- To access a Property's data via the Public API, that Property must first authorize the application.\n\n## Steps to access the API:\n- Use the ClientId / ClientSecret obtained from InnRoad team to obtain an access token using the Authentication section\n- Once authenticated, access token will be automatically added to the request headers.\n- Try any of the available endpoints to test the API.\n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://platform-public-api.devinnroad.com/"
+    }
+  ],
+  "paths": {
+    "/api/tenants/{tenantId}/access": {
+      "get": {
+        "tags": [
+          "Tenants"
+        ],
+        "summary": "Endpoint to retrieve tenant access information.",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "Tenant identifier(Alpha-numeric and ULID format) that is received from innRoad team.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAccessResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAccessResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAccessResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/room-classes": {
+      "get": {
+        "tags": [
+          "Room Classes"
+        ],
+        "summary": "Retrieves a paginated list of room classes for a given tenant.",
+        "parameters": [
+          {
+            "name": "Statuses",
+            "in": "query",
+            "description": "Optional list of statuses to filter by. If omitted, all statuses are returned.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "Inactive",
+                  "Active"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number for pagination (1-based). Defaults to 1.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 20.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRoomClassResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRoomClassResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRoomClassResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/room-classes/{roomClassId}": {
+      "get": {
+        "tags": [
+          "Room Classes"
+        ],
+        "summary": "Retrieves a single room class by its identifier.",
+        "parameters": [
+          {
+            "name": "roomClassId",
+            "in": "path",
+            "description": "Unique identifier of the room class. Retrieve available IDs from GET api/tenants/{tenantId}/room-classes.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomClassResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomClassResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomClassResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/reservations/folios": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Retrieves folio details for a batch of reservations.",
+        "description": "Accepts a list of reservation numbers and returns the associated folio items and transactions for each.",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetReservationsFoliosRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetReservationsFoliosRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetReservationsFoliosRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReservationFoliosResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReservationFoliosResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReservationFoliosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/reservations": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Retrieves a paginated list of reservations for a given tenant.",
+        "parameters": [
+          {
+            "name": "FilterType",
+            "in": "query",
+            "description": "Type of search filter to apply.",
+            "schema": {
+              "$ref": "#/components/schemas/FilterType"
+            }
+          },
+          {
+            "name": "Statuses",
+            "in": "query",
+            "description": "Optional list of statuses to filter by. If omitted, all statuses are returned.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "Reserved",
+                  "Confirmed",
+                  "Cancelled",
+                  "Guaranteed",
+                  "InHouse",
+                  "Departed",
+                  "OnHold",
+                  "NoShow"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ArrivalDateFrom",
+            "in": "query",
+            "description": "Filter reservations with arrival date on or after this date (required if filterType=ArrivalDate).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "ArrivalDateTo",
+            "in": "query",
+            "description": "Filter reservations with arrival  date on or before this date (required if filterType=ArrivalDate).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "UpdatedDateFrom",
+            "in": "query",
+            "description": "Filter reservations updated on or after this datetime (required if filterType=UpdatedDate ).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "UpdatedDateTo",
+            "in": "query",
+            "description": "Filter reservations updated on or before this datetime (required if filterType=UpdatedDate ).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number (1-based). Default is 1.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Items per page. Default is 100, maximum is 1000.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfReservationResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfReservationResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfReservationResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/reservations/{reservationNumber}": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Retrieves a single reservation by its reservation number.",
+        "parameters": [
+          {
+            "name": "reservationNumber",
+            "in": "path",
+            "description": "Unique reservation number. Retrieve available numbers from GET api/tenants/{tenantId}/reservations.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/rate-plans/{ratePlanId}/daily-rates": {
+      "patch": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Updates daily rates for a rate plan.",
+        "description": "Applies rate updates for one or more dates under the specified rate plan. Existing rates for the given dates are overwritten.",
+        "parameters": [
+          {
+            "name": "ratePlanId",
+            "in": "path",
+            "description": "Unique identifier of the rate plan. Retrieve available IDs from GET api/tenants/{tenantId}/rate-plans.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDailyRatesRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDailyRatesRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDailyRatesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Retrieves daily rates for a rate plan within a date range.",
+        "parameters": [
+          {
+            "name": "ratePlanId",
+            "in": "path",
+            "description": "Unique identifier of the rate plan. Retrieve available IDs from GET api/tenants/{tenantId}/rate-plans.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "FromDate",
+            "in": "query",
+            "description": "Filter rates starting from this date, inclusive (yyyy-MM-dd). (Optional)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "ToDate",
+            "in": "query",
+            "description": "Filter rates up to this date, inclusive (yyyy-MM-dd). (Optional)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number for pagination (1-based). Defaults to 1.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 20.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfDailyRateResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfDailyRateResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfDailyRateResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/rate-plans": {
+      "get": {
+        "tags": [
+          "Rate Plans"
+        ],
+        "summary": "Retrieves a paginated list of rate plans for a given tenant.",
+        "parameters": [
+          {
+            "name": "Statuses",
+            "in": "query",
+            "description": "Optional list of statuses to filter by. If omitted, all statuses are returned.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "Inactive",
+                  "Active"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number for pagination (1-based). Defaults to 1.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page. Defaults to 20.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRatePlanResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRatePlanResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfRatePlanResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/rate-plans/{ratePlanId}": {
+      "get": {
+        "tags": [
+          "Rate Plans"
+        ],
+        "summary": "Retrieves a single rate plan by its identifier.",
+        "parameters": [
+          {
+            "name": "ratePlanId",
+            "in": "path",
+            "description": "Unique identifier of the rate plan. Retrieve available IDs from GET api/tenants/{tenantId}/rate-plans.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatePlanResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatePlanResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatePlanResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/property": {
+      "get": {
+        "tags": [
+          "Properties"
+        ],
+        "summary": "Retrieves the property details for a given tenant.",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "description": "Tenant Id (Alphanumeric). Retrieved from your authentication context.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyResource"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenants/{tenantId}/room-classes/{roomClassId}/availabilities": {
+      "get": {
+        "tags": [
+          "Availabilities"
+        ],
+        "summary": "Retrieves availabilities for a room class within a date range.",
+        "description": "Returns daily availability counts for the specified room class. Both StartDate and EndDate are inclusive. Date format: yyyy-MM-dd.",
+        "parameters": [
+          {
+            "name": "roomClassId",
+            "in": "path",
+            "description": "Unique identifier of the room class. Retrieve available IDs from GET api/tenants/{tenantId}/room-classes.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "StartDate",
+            "in": "query",
+            "description": "Start date of the availability range, inclusive (yyyy-MM-dd).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "description": "End date of the availability range, inclusive (yyyy-MM-dd).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityResource"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityResource"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityResource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbidResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddressResource": {
+        "required": [
+          "addressLine",
+          "city",
+          "country",
+          "location"
+        ],
+        "type": "object",
+        "properties": {
+          "addressLine": {
+            "type": "string",
+            "description": "The street address line."
+          },
+          "city": {
+            "type": "string",
+            "description": "The city or town name."
+          },
+          "country": {
+            "type": "string",
+            "description": "The country name."
+          },
+          "location": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The geographic location of the address. (Optional)",
+                "$ref": "#/components/schemas/GeoLocationResource"
+              }
+            ]
+          },
+          "state": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The state or province name. (Optional)"
+          },
+          "postalCode": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The postal code or zip code. (Optional)"
+          }
+        }
+      },
+      "AuthenticationProperties": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AvailabilityResource": {
+        "required": [
+          "date",
+          "total",
+          "available",
+          "sold",
+          "outOfOrder",
+          "groupBlocked"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "The date for this availability record (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of rooms for this room class.",
+            "format": "int32"
+          },
+          "available": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of rooms available for booking.",
+            "format": "int32"
+          },
+          "sold": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of rooms sold (booked).",
+            "format": "int32"
+          },
+          "outOfOrder": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of rooms marked as out of order.",
+            "format": "int32"
+          },
+          "groupBlocked": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of rooms blocked for group bookings.",
+            "format": "int32"
+          }
+        }
+      },
+      "DailyRateResource": {
+        "required": [
+          "date",
+          "roomClassRates",
+          "lastUpdate"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "The date this rate applies to (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "roomClassRates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomClassRateResource"
+            },
+            "description": "List of room class rates for this date."
+          },
+          "lastUpdate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "EnumResponseOfLedgerAccountType": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric value of the enum.",
+            "$ref": "#/components/schemas/LedgerAccountType"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The string name of the enum value."
+          }
+        }
+      },
+      "EnumResponseOfPropertyStatus": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric value of the enum.",
+            "$ref": "#/components/schemas/PropertyStatus"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The string name of the enum value."
+          }
+        }
+      },
+      "EnumResponseOfRatePlanStatus": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric value of the enum.",
+            "$ref": "#/components/schemas/RatePlanStatus"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The string name of the enum value."
+          }
+        }
+      },
+      "EnumResponseOfReservationStatus": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric value of the enum.",
+            "$ref": "#/components/schemas/ReservationStatus"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The string name of the enum value."
+          }
+        }
+      },
+      "EnumResponseOfTenantAuthorizationStatus": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric value of the enum.",
+            "$ref": "#/components/schemas/TenantAuthorizationStatus"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The string name of the enum value."
+          }
+        }
+      },
+      "FilterType": {
+        "enum": [
+          "ArrivalDate",
+          "UpdatedDate"
+        ],
+        "type": "string"
+      },
+      "FolioItemResource": {
+        "required": [
+          "id",
+          "mainTransaction",
+          "additionalTransactions"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the folio item."
+          },
+          "mainTransaction": {
+            "description": "The primary transaction for this folio item.",
+            "$ref": "#/components/schemas/MainTransactionResource"
+          },
+          "additionalTransactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolioItemTransactionResource"
+            },
+            "description": "Additional transactions associated with this folio item."
+          }
+        }
+      },
+      "FolioItemTransactionResource": {
+        "required": [
+          "id",
+          "amount",
+          "description",
+          "ledgerAccountType",
+          "effectiveDate",
+          "createdDate",
+          "updatedDate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the transaction."
+          },
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Transaction amount.",
+            "format": "double"
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional description of the transaction."
+          },
+          "ledgerAccountType": {
+            "description": "Ledger account type classification for this transaction.",
+            "$ref": "#/components/schemas/EnumResponseOfLedgerAccountType"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "description": "Date the transaction is effective (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Timestamp when the transaction was created (UTC).",
+            "format": "date-time"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "FolioResource": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the folio."
+          },
+          "folioItems": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/FolioItemResource"
+            },
+            "description": "List of folio items. (Optional)"
+          }
+        }
+      },
+      "ForbidResult": {
+        "type": "object",
+        "properties": {
+          "authenticationSchemes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "properties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AuthenticationProperties"
+              }
+            ]
+          }
+        }
+      },
+      "GeoLocationResource": {
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "The latitude coordinate in decimal degrees.",
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "The longitude coordinate in decimal degrees.",
+            "format": "double"
+          }
+        }
+      },
+      "GetReservationFoliosResponse": {
+        "required": [
+          "reservationsFolios"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationsFolios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReservationFoliosResponse"
+            },
+            "description": "List of reservations with their associated folios."
+          }
+        }
+      },
+      "GetReservationsFoliosRequest": {
+        "required": [
+          "reservationNumbers"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationNumbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of reservation numbers to retrieve folio details for."
+          }
+        }
+      },
+      "LedgerAccountType": {
+        "enum": [
+          "None",
+          "Incidental",
+          "RoomCharge",
+          "PaymentMethod",
+          "Tax",
+          "Transfer",
+          "UnitExpenses",
+          "UnitRevenues",
+          "TravelAgentCommission",
+          "DistributionMethod",
+          "Package",
+          "Retail",
+          "GiftCertificate",
+          "GiftCertificateRedeemed",
+          "ManagementExpenses",
+          "ManagementRevenues",
+          "Fee"
+        ],
+        "type": "string"
+      },
+      "ListResponseOfDailyRateResource": {
+        "required": [
+          "items",
+          "pageNumber",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyRateResource"
+            },
+            "description": "The list of items for the current page."
+          },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The current page number (1-based).",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of items per page.",
+            "format": "int32"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of items across all pages.",
+            "format": "int32"
+          }
+        }
+      },
+      "ListResponseOfRatePlanResource": {
+        "required": [
+          "items",
+          "pageNumber",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RatePlanResource"
+            },
+            "description": "The list of items for the current page."
+          },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The current page number (1-based).",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of items per page.",
+            "format": "int32"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of items across all pages.",
+            "format": "int32"
+          }
+        }
+      },
+      "ListResponseOfReservationResource": {
+        "required": [
+          "items",
+          "pageNumber",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReservationResource"
+            },
+            "description": "The list of items for the current page."
+          },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The current page number (1-based).",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of items per page.",
+            "format": "int32"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of items across all pages.",
+            "format": "int32"
+          }
+        }
+      },
+      "ListResponseOfRoomClassResource": {
+        "required": [
+          "items",
+          "pageNumber",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomClassResource"
+            },
+            "description": "The list of items for the current page."
+          },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The current page number (1-based).",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of items per page.",
+            "format": "int32"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of items across all pages.",
+            "format": "int32"
+          }
+        }
+      },
+      "MainTransactionResource": {
+        "required": [
+          "amount",
+          "description",
+          "ledgerAccountType",
+          "quantity",
+          "effectiveDate",
+          "createdDate",
+          "updatedDate"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Transaction amount.",
+            "format": "double"
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional description of the transaction."
+          },
+          "ledgerAccountType": {
+            "description": "Ledger account type classification for this transaction.",
+            "$ref": "#/components/schemas/EnumResponseOfLedgerAccountType"
+          },
+          "quantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of units for this transaction.",
+            "format": "int32"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "description": "Date the transaction is effective (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Timestamp when the transaction was created (UTC).",
+            "format": "date-time"
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PropertyResource": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "address",
+          "timezone",
+          "currencyCode",
+          "roomCounts",
+          "lastUpdate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The unique identifier of the property.",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the property."
+          },
+          "status": {
+            "description": "The status of the property.",
+            "$ref": "#/components/schemas/EnumResponseOfPropertyStatus"
+          },
+          "address": {
+            "description": "The address of the property.",
+            "$ref": "#/components/schemas/AddressResource"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "The time zone of the property. Timezone is in IANA format. Example: America/Los_Angeles"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency code of the property. Example: USD"
+          },
+          "roomCounts": {
+            "description": "The number of rooms in the property.",
+            "$ref": "#/components/schemas/RoomCountsResource"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "description": "Last update DateTime of the property.",
+            "format": "date-time"
+          }
+        }
+      },
+      "PropertyStatus": {
+        "enum": [
+          "Inactive",
+          "Active"
+        ],
+        "type": "string"
+      },
+      "RateAmountResource": {
+        "required": [
+          "base",
+          "includedAdults",
+          "includedPersons",
+          "extraAdult",
+          "extraChild"
+        ],
+        "type": "object",
+        "properties": {
+          "base": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Base rate amount.",
+            "format": "double"
+          },
+          "includedAdults": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Number of adults included in the base rate. (Optional)",
+            "format": "int32"
+          },
+          "includedPersons": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Number of persons included in the base rate. (Optional)",
+            "format": "int32"
+          },
+          "extraAdult": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Additional charge per extra adult. (Optional)",
+            "format": "double"
+          },
+          "extraChild": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Additional charge per extra child. (Optional)",
+            "format": "double"
+          }
+        }
+      },
+      "RatePlanResource": {
+        "required": [
+          "id",
+          "name",
+          "isDerived",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the rate plan."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the rate plan."
+          },
+          "isDerived": {
+            "type": "boolean",
+            "description": "Indicates whether this rate plan is derived from another rate plan."
+          },
+          "status": {
+            "description": "Current status of the rate plan.",
+            "$ref": "#/components/schemas/EnumResponseOfRatePlanStatus"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "RatePlanStatus": {
+        "enum": [
+          "Inactive",
+          "Active"
+        ],
+        "type": "string"
+      },
+      "RateResource": {
+        "required": [
+          "rateAmount",
+          "stayRules"
+        ],
+        "type": "object",
+        "properties": {
+          "rateAmount": {
+            "description": "Rate amount details.",
+            "$ref": "#/components/schemas/RateAmountResource"
+          },
+          "stayRules": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Stay restriction rules for this rate. (Optional)",
+                "$ref": "#/components/schemas/StayRulesResource"
+              }
+            ]
+          }
+        }
+      },
+      "ReservationFoliosResponse": {
+        "required": [
+          "reservationNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationNumber": {
+            "type": "string",
+            "description": "The reservation number."
+          },
+          "folios": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/FolioResource"
+            },
+            "description": "List of folios associated with this reservation. (Optional)"
+          }
+        }
+      },
+      "ReservationResource": {
+        "required": [
+          "reservationNumber",
+          "confirmationNumber",
+          "roomNumber",
+          "roomClassId",
+          "status",
+          "arrivalDate",
+          "departureDate",
+          "source",
+          "totalNights",
+          "adults",
+          "children",
+          "isGroup",
+          "bookedOn",
+          "cancellationDate",
+          "lastUpdate"
+        ],
+        "type": "object",
+        "properties": {
+          "reservationNumber": {
+            "type": "string",
+            "description": "Unique reservation number."
+          },
+          "confirmationNumber": {
+            "type": "string",
+            "description": "Confirmation number."
+          },
+          "roomNumber": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Room number assigned to the reservation."
+          },
+          "roomClassId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Unique identifier of the assigned room class."
+          },
+          "status": {
+            "description": "Current status of the reservation.",
+            "$ref": "#/components/schemas/EnumResponseOfReservationStatus"
+          },
+          "arrivalDate": {
+            "description": "Scheduled arrival date (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "departureDate": {
+            "description": "Scheduled departure date (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "string",
+            "description": "Booking source or channel."
+          },
+          "totalNights": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of nights for the stay.",
+            "format": "int32"
+          },
+          "adults": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of adults in the reservation.",
+            "format": "int32"
+          },
+          "children": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of children in the reservation.",
+            "format": "int32"
+          },
+          "isGroup": {
+            "type": "boolean",
+            "description": "Indicates whether the reservation is part of a group account."
+          },
+          "bookedOn": {
+            "type": "string",
+            "description": "Date and time when the reservation was booked (UTC).",
+            "format": "date-time"
+          },
+          "cancellationDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Date the reservation was cancelled, if applicable. (Optional)",
+            "format": "date-time"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "ReservationStatus": {
+        "enum": [
+          "Reserved",
+          "Confirmed",
+          "Cancelled",
+          "Guaranteed",
+          "InHouse",
+          "Departed",
+          "OnHold",
+          "NoShow"
+        ],
+        "type": "string"
+      },
+      "RoomClassRateResource": {
+        "required": [
+          "roomClassId",
+          "rate"
+        ],
+        "type": "object",
+        "properties": {
+          "roomClassId": {
+            "type": "string",
+            "description": "Unique identifier of the room class."
+          },
+          "rate": {
+            "description": "Rate details for this room class.",
+            "$ref": "#/components/schemas/RateResource"
+          }
+        }
+      },
+      "RoomClassResource": {
+        "required": [
+          "id",
+          "name",
+          "abbreviation",
+          "status",
+          "description",
+          "address",
+          "roomCounts",
+          "maxAdults",
+          "maxPersons",
+          "lastUpdate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the room class."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the room class."
+          },
+          "abbreviation": {
+            "type": "string",
+            "description": "Short abbreviation code for the room class."
+          },
+          "status": {
+            "description": "Current status of the room class.",
+            "$ref": "#/components/schemas/RoomClassStatusResponse"
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Optional description of the room class."
+          },
+          "address": {
+            "description": "Physical address of the property associated with this room class.",
+            "$ref": "#/components/schemas/AddressResource"
+          },
+          "roomCounts": {
+            "description": "Room count breakdown for this room class.",
+            "$ref": "#/components/schemas/RoomCounts"
+          },
+          "maxAdults": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Maximum number of adults allowed.",
+            "format": "int32"
+          },
+          "maxPersons": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Maximum number of persons allowed.",
+            "format": "int32"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "description": "Timestamp of the last update (UTC).",
+            "format": "date-time"
+          }
+        }
+      },
+      "RoomClassStatus": {
+        "enum": [
+          "Inactive",
+          "Active"
+        ],
+        "type": "string"
+      },
+      "RoomClassStatusResponse": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The numeric status identifier.",
+            "$ref": "#/components/schemas/RoomClassStatus"
+          },
+          "name": {
+            "type": "string",
+            "description": "The status name."
+          }
+        }
+      },
+      "RoomCounts": {
+        "required": [
+          "totalRooms",
+          "physicalRooms",
+          "virtualRooms"
+        ],
+        "type": "object",
+        "properties": {
+          "totalRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Total number of rooms in this room class.",
+            "format": "int32"
+          },
+          "physicalRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of physical rooms.",
+            "format": "int32"
+          },
+          "virtualRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Number of virtual rooms.",
+            "format": "int32"
+          }
+        }
+      },
+      "RoomCountsResource": {
+        "required": [
+          "physicalRooms",
+          "virtualRooms"
+        ],
+        "type": "object",
+        "properties": {
+          "physicalRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of physical rooms in the property.",
+            "format": "int32"
+          },
+          "virtualRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The number of virtual rooms (Suite rooms) in the property.",
+            "format": "int32"
+          },
+          "totalRooms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The total number of rooms in the property (physical + virtual).",
+            "format": "int32"
+          }
+        }
+      },
+      "StayRulesResource": {
+        "required": [
+          "minNights",
+          "noCheckIn",
+          "noCheckOut"
+        ],
+        "type": "object",
+        "properties": {
+          "minNights": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Minimum number of nights required for this rate. (Optional)",
+            "format": "int32"
+          },
+          "noCheckIn": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "If true, check-in is not permitted on this date. (Optional)"
+          },
+          "noCheckOut": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "If true, check-out is not permitted on this date. (Optional)"
+          }
+        }
+      },
+      "TenantAccessPermission": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantAccessResource": {
+        "required": [
+          "status",
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/EnumResponseOfTenantAuthorizationStatus"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantAccessRule"
+            }
+          }
+        }
+      },
+      "TenantAccessRule": {
+        "required": [
+          "entityId",
+          "entityType",
+          "permissionType"
+        ],
+        "type": "object",
+        "properties": {
+          "entityId": {
+            "type": "string"
+          },
+          "entityType": {
+            "$ref": "#/components/schemas/TenantAccessPermission"
+          },
+          "permissionType": {
+            "$ref": "#/components/schemas/TenantAccessPermission"
+          }
+        }
+      },
+      "TenantAuthorizationStatus": {
+        "enum": [
+          "Authorized",
+          "Removed"
+        ],
+        "type": "string"
+      },
+      "UpdateDailyRateRequest": {
+        "required": [
+          "date",
+          "roomClassRates"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "The date to apply rate updates for (yyyy-MM-dd).",
+            "format": "date-time"
+          },
+          "roomClassRates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomClassRateResource"
+            },
+            "description": "List of room class rates to update for this date."
+          }
+        }
+      },
+      "UpdateDailyRatesRequest": {
+        "required": [
+          "updateDailyRateRequests"
+        ],
+        "type": "object",
+        "properties": {
+          "updateDailyRateRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateDailyRateRequest"
+            },
+            "description": "List of daily rate updates to apply."
+          }
+        }
+      },
+      "ValidationError": {
+        "required": [
+          "propertyName",
+          "errorMessage",
+          "errorCode"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "errorCategory": {
+            "$ref": "#/components/schemas/ValidationErrorCategory"
+          }
+        }
+      },
+      "ValidationErrorCategory": {
+        "enum": [
+          "Input",
+          "Domain"
+        ],
+        "type": "string",
+        "default": 0
+      },
+      "ValidationErrorResponse": {
+        "required": [
+          "validationErrors"
+        ],
+        "type": "object",
+        "properties": {
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://identity-api.devinnroad.com/connect/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Tenants"
+    },
+    {
+      "name": "Room Classes"
+    },
+    {
+      "name": "Reservations"
+    },
+    {
+      "name": "Rates"
+    },
+    {
+      "name": "Rate Plans"
+    },
+    {
+      "name": "Properties"
+    },
+    {
+      "name": "Availabilities"
+    }
+  ]
+}

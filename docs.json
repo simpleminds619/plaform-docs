@@ -49,7 +49,7 @@
       },
       {
         "tab": "API reference",
-        "openapi": "https://platform-public-api.qainnroad.com/openapi/v1.json"
+        "openapi": "api-reference/v1.json"
       }
     ],
     "global": {
